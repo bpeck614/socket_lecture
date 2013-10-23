@@ -14,12 +14,18 @@ int main(int argc, char *argv[])
     struct sockaddr_in serveraddr, clientaddr; // sockaddr structs 
     int len = sizeof(clientaddr);  // length of client address. 
     int n;  // size of data transmitted 
+    char yes = '1';
 
     // try to open socket 
     if ( (sersock = socket(PF_INET, SOCK_STREAM, 0)) < 0) { 
         perror("socket() error:\n"); 
         exit(1); 
-    } 
+    }
+
+    if ( setsockopt(sersock, SOL_SOCKET, SO_REUSEADDR,&yes,sizeof(int)) < 0) {
+	perror("setsockopt() error:\n");
+	exit(1);
+    }
    
     // set address information 
     serveraddr.sin_family = PF_INET; 
